@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Welcome to markdown-blog !</title>
+        <link rel="stylesheet" href="../assets/style.css">
+    </head>
+    
+    <body>
+        <div class="app">
+        <header class="navbar"></header>
+        <aside class="sidebar">
+    <ul class="ul-0"><li class="li-1"><p class="a-2">Introduction</p><ul class="ul-2"><li class="li-3"><a href="hello-world.html" class="a-4">Welcome to markdown-blog !</a></li></ul></li></ul>
+    </aside>
+        <main class="page"><div class="page-bd">
+        <h1>Welcome to markdown-blog !</h1>
+<blockquote>
+<p>防抖：触发完事件 n 秒内不再触发事件，才执行<br>
+思路：每次触发事件时都取消之前的延时调用</p>
+</blockquote>
+<blockquote>
+<p>节流：如果你持续触发事件，每隔一段时间，只执行一次事件<br>
+思路：每次触发事件时都判断当前是否有等待执行的延时函数</p>
+</blockquote>
+<h3>结果</h3>
+<details><summary>防抖：点击查看结果</summary>
+<pre><code class="language-javascript"><span class="hljs-comment">// 防抖</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">debounce</span>(<span class="hljs-params">fn, wait = <span class="hljs-number">500</span> </span>) </span>{
+    <span class="hljs-keyword">let</span> timeout = <span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        clearTimeout(timeout);
+        timeout = setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+            fn.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
+        }, wait);
+    }
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sayHi</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'防抖成功'</span>);
+}
+<span class="hljs-keyword">const</span> fn = debounce(sayHi);
+<span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">'resize'</span>, fn)
+</code></pre>
+</details>
+<details><summary>节流：点击查看结果</summary>
+<pre><code class="language-javascript"><span class="hljs-comment">// 节流</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">throttle</span>(<span class="hljs-params">fn, wait = <span class="hljs-number">500</span> </span>) </span>{
+    <span class="hljs-keyword">let</span> flag = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">if</span> (!flag) <span class="hljs-keyword">return</span>;
+        flag = <span class="hljs-literal">false</span>;
+        timeout = setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+            fn.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);
+            flag = <span class="hljs-literal">true</span>;
+        }, wait);
+    }
+}
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sayHi</span>(<span class="hljs-params">e</span>) </span>{
+    <span class="hljs-built_in">console</span>.info(e, <span class="hljs-keyword">this</span>)
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'节流成功'</span>);
+}
+<span class="hljs-keyword">const</span> fn = throttle(sayHi);
+<span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">'resize'</span>, fn)
+</code></pre>
+</details>
+<hr>
+<h3>延伸</h3>
+<ul>
+<li>防抖：input suggest, button click</li>
+<li>节流：resize, scroll</li>
+</ul>
+<div class="page-nav"></div>
+        </div>
+    </main>
+        </div>
+        <script>
+        const pageName = location.href.replace(/^(.*)\/([^/]*).html$/i, "$2");
+            const menu = document.querySelector('.sidebar ul');
+            const current = menu.querySelector('a[href="' + pageName + '.html"]');
+            const list = document.querySelectorAll('.sidebar li');
+            const cache = {};
+            list.forEach((item, index) => {
+                const ul = item.querySelector('ul');
+                if (ul) {
+                    const holder = item.firstElementChild;
+                    holder.setAttribute('data-holder', index);
+                    holder.setAttribute('class', 'holder');
+                    ul.setAttribute('data-menu', index);
+                    cache[index] = ul;
+                }
+            })
+            if (current) {
+                current.setAttribute('class', 'cur');
+                displayParent(current);
+            }
+            menu.addEventListener('click', (e) => {
+                const target = e.target;
+                const holder = target.getAttribute('data-holder');
+                if (holder) {
+                    const block = cache[holder].style.display === 'block';
+                    cache[holder].style.display = block ? 'none' : 'block';
+                    target.setAttribute('class', block ? 'holder' : 'holder active');
+                }
+            });
+
+            function displayParent(ele) {
+                const ul = ele.parentElement.parentElement;
+                if (ul && ul.getAttribute('data-menu')) {
+                    ul.style.display = 'block';
+                    ul.previousElementSibling.setAttribute('class', 'holder active');
+                    displayParent(ul);
+                }
+            }
+        </script>
+    </body>
+    </html>
