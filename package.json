@@ -1,6 +1,6 @@
 {
   "name": "markdown-blogs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Creating a Personal Blog through Markdown",
   "main": "index.js",
   "scripts": {
